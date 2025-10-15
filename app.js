@@ -88,6 +88,15 @@ document.getElementById("activity-form").addEventListener("submit", (e) => {
   } else {
     saveActivity(activity);
     document.getElementById("status").textContent = "📦 Guardado offline.";
+    
+    // Registrar sincronización en segundo plano (si está disponible)
+  if ("serviceWorker" in navigator && "SyncManager" in window) {
+    navigator.serviceWorker.ready.then((reg) => {
+      reg.sync.register("sync-activities")
+        .then(() => console.log("🕒 Sincronización en segundo plano registrada"))
+        .catch((err) => console.error("Error al registrar sync:", err));
+    });
+  }
   }
 
   e.target.reset();
