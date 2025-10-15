@@ -7,7 +7,7 @@
 }
 
 body {
-  background: linear-gradient(135deg, #4CAF50, #2196F3);
+  background: linear-gradient(135deg, #004402, #004781);
   color: #fff;
   height: 100vh;
   display: flex;
@@ -125,7 +125,7 @@ form#activity-form label {
   font-weight: 600;
   margin-top: 10px;
   margin-bottom: 6px;
-  color: #fff;
+  color: #ffffff;
 }
 
 form#activity-form input,
@@ -137,7 +137,7 @@ form#activity-form textarea {
   font-size: 1rem;
   outline: none;
   background: rgba(255, 255, 255, 0.2);
-  color: #fff;
+  color: #000000;
   transition: background 0.3s, box-shadow 0.3s;
 }
 
