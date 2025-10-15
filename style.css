@@ -101,3 +101,103 @@ body {
     transform: translateY(0);
   }
 }
+
+/* ========================
+   FORMULARIO DE ACTIVIDADES
+   ======================== */
+
+form#activity-form {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 25px 30px;
+  margin: 30px auto;
+  width: 90%;
+  max-width: 420px;
+  text-align: left;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 1s ease forwards;
+}
+
+form#activity-form label {
+  display: block;
+  font-weight: 600;
+  margin-top: 10px;
+  margin-bottom: 6px;
+  color: #fff;
+}
+
+form#activity-form input,
+form#activity-form textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+form#activity-form input:focus,
+form#activity-form textarea:focus {
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 10px rgba(33, 150, 243, 0.7);
+}
+
+form#activity-form textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+form#activity-form button {
+  margin-top: 15px;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #4CAF50, #2196F3);
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+form#activity-form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(33, 150, 243, 0.5);
+}
+
+/* Estado de conexión */
+#status {
+  margin-top: 10px;
+  font-weight: 500;
+  text-align: center;
+  color: #fff;
+}
+
+/* Lista de actividades */
+#activity-list {
+  list-style: none;
+  margin: 20px auto;
+  padding: 0;
+  width: 90%;
+  max-width: 420px;
+  text-align: left;
+}
+
+#activity-list li {
+  background: rgba(255, 255, 255, 0.1);
+  margin-bottom: 10px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  color: #fff;
+  transition: background 0.3s;
+}
+
+#activity-list li:hover {
+  background: rgba(255, 255, 255, 0.2);
+}

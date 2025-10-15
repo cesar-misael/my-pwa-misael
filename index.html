@@ -10,12 +10,34 @@
 </head>
 <body>
   <div id="splash-screen">
-    <h1>Aguanta bro...</h1>
+    <h1>Espera bro...</h1>
   </div>
   <div id="app" style="display:none;">
     <h1>Welcome my pwa</h1>
     <p>Home</p>
   </div>
-  <script src="app.js"></script>
+  
+
+  <h2>Reporte de Actividades</h2>
+
+<form id="activity-form">
+  <label for="title">Título:</label>
+  <input type="text" id="title" name="title" required>
+
+  <label for="description">Descripción:</label>
+  <textarea id="description" name="description" required></textarea>
+
+  <button type="submit">Guardar actividad</button>
+</form>
+
+<p id="status"></p>
+
+<hr>
+
+<h3>Actividades guardadas:</h3>
+<ul id="activity-list"></ul>
+
+<script src="app.js"></script>
+
 </body>
 </html>
