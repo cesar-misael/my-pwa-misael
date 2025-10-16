@@ -1,59 +1,108 @@
-const CACHE_NAME = "my-pwa-cache-v1";
+// ===========================
+// CONFIGURACIÓN BASE
+// ===========================
+const CACHE_NAME = "my-pwa-cache-v2";
 const ASSETS = [
   "./",
   "./index.html",
   "./style.css",
   "./app.js",
   "./manifest.json",
+  "./offline.html",
   "./icons/icon-192.png",
   "./icons/icon-512.png"
 ];
 
-// Instalación y guardado en caché
+// ===========================
+// INSTALACIÓN Y ACTIVACIÓN
+// ===========================
 self.addEventListener("install", event => {
+  console.log("🧱 Instalando Service Worker...");
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
   );
 });
 
-// Activación y limpieza de cachés viejas
 self.addEventListener("activate", event => {
+  console.log("🚀 Activando nuevo Service Worker...");
   event.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))
+      Promise.all(
+        keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
+      )
     )
   );
 });
 
-// Intercepta peticiones (fetch)
+// ===========================
+// ESTRATEGIAS DE CACHE AVANZADAS
+// ===========================
 self.addEventListener("fetch", event => {
   const req = event.request;
+  const url = new URL(req.url);
 
-  // Simulamos el endpoint de sincronización
-  if (req.url.endsWith("/api/sync")) {
+  // 🧩 Simulación de endpoint de sincronización
+  if (url.pathname.endsWith("/api/sync")) {
     event.respondWith(new Response(JSON.stringify({ ok: true }), {
       headers: { "Content-Type": "application/json" }
     }));
     return;
   }
 
-  // Estrategia básica de cache para recursos estáticos
-  event.respondWith(
-    caches.match(req).then(cacheRes => {
-      return cacheRes || fetch(req).then(fetchRes => {
-        return caches.open(CACHE_NAME).then(cache => {
-          cache.put(req, fetchRes.clone());
-          return fetchRes;
-        });
-      });
-    }).catch(() => {
-      // Si no hay conexión ni caché y se pide una página HTML
-      if (req.headers.get("accept").includes("text/html")) {
-        return caches.match("/offline.html");
-      }
-    })
-  );
+  // 📦 Estrategia: App Shell (HTML, CSS, JS)
+  if (ASSETS.some(asset => url.pathname.endsWith(asset.replace("./", "")))) {
+    event.respondWith(cacheFirst(req));
+    return;
+  }
+
+  // 🧠 Estrategia: Network First para peticiones dinámicas (ejemplo APIs)
+  if (url.pathname.includes("/api/")) {
+    event.respondWith(networkFirst(req));
+    return;
+  }
+
+  // 🖼 Estrategia: Stale-While-Revalidate para imágenes
+  if (req.destination === "image") {
+    event.respondWith(staleWhileRevalidate(req));
+    return;
+  }
+
+  // 🌐 Fallback general
+  event.respondWith(networkFirst(req));
 });
+
+// --- Estrategia Cache First ---
+async function cacheFirst(req) {
+  const cache = await caches.open(CACHE_NAME);
+  const cached = await cache.match(req);
+  return cached || fetch(req);
+}
+
+// --- Estrategia Network First ---
+async function networkFirst(req) {
+  const cache = await caches.open(CACHE_NAME);
+  try {
+    const fresh = await fetch(req);
+    cache.put(req, fresh.clone());
+    return fresh;
+  } catch (err) {
+    const cached = await cache.match(req);
+    return cached || (req.headers.get("accept").includes("text/html")
+      ? caches.match("./offline.html")
+      : new Response("Offline", { status: 503, statusText: "Offline" }));
+  }
+}
+
+// --- Estrategia Stale-While-Revalidate ---
+async function staleWhileRevalidate(req) {
+  const cache = await caches.open(CACHE_NAME);
+  const cached = await cache.match(req);
+  const networkFetch = fetch(req).then(fresh => {
+    cache.put(req, fresh.clone());
+    return fresh;
+  });
+  return cached || networkFetch;
+}
 
 // ===========================
 // SINCRONIZACIÓN EN SEGUNDO PLANO
@@ -95,11 +144,3 @@ async function syncActivities() {
     };
   };
 }
-
-
-// Intercepción de requests
-self.addEventListener("fetch", event => {
-  event.respondWith(
-    caches.match(event.request).then(response => response || fetch(event.request))
-  );
-});

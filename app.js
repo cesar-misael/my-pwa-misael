@@ -23,13 +23,16 @@ document.addEventListener("DOMContentLoaded", () => {
 // IndexedDB (almacenamiento offline)
 // ======================
 
-// Verificamos si IndexedDB está disponible
-if (!('indexedDB' in window)) {
+if (!("indexedDB" in window)) {
   console.error("IndexedDB no está soportado en este navegador.");
 }
 
 // Abrir o crear la base de datos
 const dbPromise = indexedDB.open("activities-db", 1);
+
+dbPromise.onerror = () => {
+  console.error("❌ Error al abrir la base de datos IndexedDB.");
+};
 
 dbPromise.onupgradeneeded = (event) => {
   const db = event.target.result;
@@ -49,7 +52,7 @@ function saveActivity(activity) {
   };
 }
 
-// Mostrar actividades
+// Mostrar actividades guardadas
 function loadActivities() {
   const dbRequest = indexedDB.open("activities-db", 1);
   dbRequest.onsuccess = (event) => {
@@ -57,8 +60,10 @@ function loadActivities() {
     const tx = db.transaction("activities", "readonly");
     const store = tx.objectStore("activities");
     const request = store.getAll();
+
     request.onsuccess = () => {
       const list = document.getElementById("activity-list");
+      if (!list) return;
       list.innerHTML = "";
       request.result.forEach((activity) => {
         const li = document.createElement("li");
@@ -70,38 +75,45 @@ function loadActivities() {
 }
 
 // Escuchar envío del formulario
-document.getElementById("activity-form").addEventListener("submit", (e) => {
-  e.preventDefault();
-  const title = document.getElementById("title").value;
-  const description = document.getElementById("description").value;
+const form = document.getElementById("activity-form");
+if (form) {
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const title = document.getElementById("title").value.trim();
+    const description = document.getElementById("description").value.trim();
 
-  const activity = {
-    title,
-    description,
-    date: new Date().toISOString(),
-    synced: false,
-  };
+    if (!title || !description) {
+      document.getElementById("status").textContent = "⚠️ Completa todos los campos.";
+      return;
+    }
 
-  // Si hay conexión, simular envío al servidor
-  if (navigator.onLine) {
-    document.getElementById("status").textContent = "✅ Enviado al servidor.";
-  } else {
-    saveActivity(activity);
-    document.getElementById("status").textContent = "📦 Guardado offline.";
-    
-    // Registrar sincronización en segundo plano (si está disponible)
-  if ("serviceWorker" in navigator && "SyncManager" in window) {
-    navigator.serviceWorker.ready.then((reg) => {
-      reg.sync.register("sync-activities")
-        .then(() => console.log("🕒 Sincronización en segundo plano registrada"))
-        .catch((err) => console.error("Error al registrar sync:", err));
-    });
-  }
-  }
+    const activity = {
+      title,
+      description,
+      date: new Date().toISOString(),
+      synced: false,
+    };
 
-  e.target.reset();
-  loadActivities();
-});
+    if (navigator.onLine) {
+      document.getElementById("status").textContent = "✅ Enviado al servidor.";
+    } else {
+      saveActivity(activity);
+      document.getElementById("status").textContent = "📦 Guardado offline.";
+
+      // Registrar sincronización en segundo plano (si está disponible)
+      if ("serviceWorker" in navigator && "SyncManager" in window) {
+        navigator.serviceWorker.ready.then((reg) => {
+          reg.sync.register("sync-activities")
+            .then(() => console.log("🕒 Sincronización en segundo plano registrada"))
+            .catch((err) => console.error("Error al registrar sync:", err));
+        });
+      }
+    }
+
+    e.target.reset();
+    loadActivities();
+  });
+}
 
 // Mostrar estado de conexión
 window.addEventListener("online", () => {
