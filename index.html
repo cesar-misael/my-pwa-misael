@@ -3,41 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MY-PWA</title>
+  <title>MY-PWA - Gestor de Actividades</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#4CAF50">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Pantalla de carga -->
   <div id="splash-screen">
     <h1>Espera bro...</h1>
   </div>
-  <div id="app" style="display:none;">
-    <h1>Welcome my pwa</h1>
-    <p>Home</p>
-  </div>
-  
 
-  <h2>Reporte de Actividades</h2>
+  <!-- Aplicación principal -->
+  <main id="app">
+    <header class="app-header">
+      <h1>Welcome my pwa</h1>
+      <p>Home</p>
+    </header>
 
-<form id="activity-form">
-  <label for="title">Título:</label>
-  <input type="text" id="title" name="title" required>
+    <section class="activities-section">
+      <h2>Reporte de Actividades</h2>
+      
+      <form id="activity-form" class="activity-form">
+        <div class="form-group">
+          <label for="title">Título:</label>
+          <input type="text" id="title" name="title" required>
+        </div>
 
-  <label for="description">Descripción:</label>
-  <textarea id="description" name="description" required></textarea>
+        <div class="form-group">
+          <label for="description">Descripción:</label>
+          <textarea id="description" name="description" required></textarea>
+        </div>
 
-  <button type="submit">Guardar actividad</button>
-</form>
+        <button type="submit">Guardar actividad</button>
+      </form>
 
-<p id="status"></p>
+      <div id="status" class="status-message"></div>
+    </section>
 
-<hr>
+    <section class="activities-list-section">
+      <h3>Actividades guardadas:</h3>
+      <ul id="activity-list" class="activity-list"></ul>
+    </section>
+  </main>
 
-<h3>Actividades guardadas:</h3>
-<ul id="activity-list"></ul>
-
-<script src="app.js"></script>
-
+  <script src="app.js"></script>
 </body>
 </html>

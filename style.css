@@ -1,4 +1,7 @@
-/* Reset básico */
+/* ===========================================
+   RESET Y CONFIGURACIONES GLOBALES
+   =========================================== */
+
 * {
   margin: 0;
   padding: 0;
@@ -9,14 +12,14 @@
 body {
   background: linear-gradient(135deg, #004402, #004781);
   color: #fff;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-/* Splash Screen */
+/* ===========================================
+   PANTALLA DE CARGA (SPLASH SCREEN)
+   =========================================== */
+
 #splash-screen {
   position: fixed;
   top: 0;
@@ -28,7 +31,8 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  animation: fadeOut 2.5s ease 2s forwards; /* desaparece después de 2s */
+  z-index: 1000;
+  animation: fadeOut 1s ease 3s forwards; /* 3 segundos de espera + 1s fade out */
 }
 
 #splash-screen h1 {
@@ -48,25 +52,181 @@ body {
   animation: spin 1s linear infinite;
 }
 
-/* App */
+/* ===========================================
+   APLICACIÓN PRINCIPAL
+   =========================================== */
+
 #app {
-  display: none;
-  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+#app.show {
+  opacity: 1;
+  visibility: visible;
   animation: fadeIn 1s ease forwards;
 }
 
-#app h1 {
+/* Header de la aplicación */
+.app-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px 0;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.app-header h1 {
   font-size: 2.2rem;
   margin-bottom: 10px;
   text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
 }
 
-#app p {
+.app-header p {
   font-size: 1.2rem;
   opacity: 0.9;
 }
 
-/* Animaciones */
+/* ===========================================
+   SECCIÓN DE FORMULARIO
+   =========================================== */
+
+.activities-section {
+  margin-bottom: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 25px;
+  backdrop-filter: blur(8px);
+}
+
+.activities-section h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+  color: #fff;
+}
+
+/* Formulario */
+.activity-form {
+  text-align: left;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.activity-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #ffffff;
+}
+
+.activity-form input,
+.activity-form textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  background: rgba(255, 255, 255, 0.2);
+  color: #000000;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+.activity-form input:focus,
+.activity-form textarea:focus {
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 10px rgba(33, 150, 243, 0.7);
+}
+
+.activity-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.activity-form button {
+  margin-top: 10px;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #4CAF50, #2196F3);
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.activity-form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(33, 150, 243, 0.5);
+}
+
+/* ===========================================
+   ESTADO Y MENSAJES
+   =========================================== */
+
+.status-message {
+  margin-top: 15px;
+  font-weight: 500;
+  text-align: center;
+  color: #fff;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+/* ===========================================
+   LISTA DE ACTIVIDADES
+   =========================================== */
+
+.activities-list-section {
+  margin-top: 30px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 25px;
+  backdrop-filter: blur(8px);
+}
+
+.activities-list-section h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.activity-list {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  width: 100%;
+  max-width: 500px;
+}
+
+.activity-list li {
+  background: rgba(255, 255, 255, 0.1);
+  margin-bottom: 12px;
+  padding: 15px 20px;
+  border-radius: 10px;
+  color: #fff;
+  transition: all 0.3s ease;
+  border-left: 4px solid #4CAF50;
+}
+
+.activity-list li:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateX(5px);
+}
+
+/* ===========================================
+   ANIMACIONES
+   =========================================== */
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -102,102 +262,45 @@ body {
   }
 }
 
-/* ========================
-   FORMULARIO DE ACTIVIDADES
-   ======================== */
+/* ===========================================
+   RESPONSIVE DESIGN
+   =========================================== */
 
-form#activity-form {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(8px);
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  border-radius: 16px;
-  padding: 25px 30px;
-  margin: 30px auto;
-  width: 90%;
-  max-width: 420px;
-  text-align: left;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-  animation: fadeIn 1s ease forwards;
+@media (max-width: 768px) {
+  #app {
+    padding: 15px;
+  }
+  
+  .app-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .activities-section,
+  .activities-list-section {
+    padding: 20px;
+  }
+  
+  .activity-form input,
+  .activity-form textarea {
+    padding: 10px 12px;
+  }
+  
+  .activity-list li {
+    padding: 12px 15px;
+  }
 }
 
-form#activity-form label {
-  display: block;
-  font-weight: 600;
-  margin-top: 10px;
-  margin-bottom: 6px;
-  color: #ffffff;
-}
-
-form#activity-form input,
-form#activity-form textarea {
-  width: 100%;
-  padding: 10px 12px;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  outline: none;
-  background: rgba(255, 255, 255, 0.2);
-  color: #000000;
-  transition: background 0.3s, box-shadow 0.3s;
-}
-
-form#activity-form input:focus,
-form#activity-form textarea:focus {
-  background: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 0 10px rgba(33, 150, 243, 0.7);
-}
-
-form#activity-form textarea {
-  min-height: 90px;
-  resize: vertical;
-}
-
-form#activity-form button {
-  margin-top: 15px;
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: bold;
-  background: linear-gradient(135deg, #4CAF50, #2196F3);
-  color: white;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-form#activity-form button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(33, 150, 243, 0.5);
-}
-
-/* Estado de conexión */
-#status {
-  margin-top: 10px;
-  font-weight: 500;
-  text-align: center;
-  color: #fff;
-}
-
-/* Lista de actividades */
-#activity-list {
-  list-style: none;
-  margin: 20px auto;
-  padding: 0;
-  width: 90%;
-  max-width: 420px;
-  text-align: left;
-}
-
-#activity-list li {
-  background: rgba(255, 255, 255, 0.1);
-  margin-bottom: 10px;
-  padding: 12px 16px;
-  border-radius: 10px;
-  color: #fff;
-  transition: background 0.3s;
-}
-
-#activity-list li:hover {
-  background: rgba(255, 255, 255, 0.2);
+@media (max-width: 480px) {
+  .app-header h1 {
+    font-size: 1.6rem;
+  }
+  
+  .activities-section h2 {
+    font-size: 1.5rem;
+  }
+  
+  .activities-section,
+  .activities-list-section {
+    padding: 15px;
+  }
 }
