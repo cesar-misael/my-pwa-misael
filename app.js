@@ -7,7 +7,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const app = document.getElementById("app");
 
     if (splash) splash.style.display = "none";
-    if (app) app.style.display = "block";
+    if (app) {
+      app.style.display = "block";
+      app.classList.add("show");
+    }
   }, 2500); // coincide con la animación fadeOut en style.css (2.5s)
 
   // --- Registro del Service Worker ---
@@ -125,3 +128,19 @@ window.addEventListener("offline", () => {
 
 // Cargar actividades al abrir
 window.addEventListener("load", loadActivities);
+
+// ======================
+// Notificaciones Push
+// ======================
+
+if ("Notification" in window && "serviceWorker" in navigator) {
+  // Preguntar permiso al usuario
+  Notification.requestPermission().then(permission => {
+    if (permission === "granted") {
+      console.log("🔔 Permiso para notificaciones concedido.");
+    } else {
+      console.log("🚫 Permiso de notificaciones denegado.");
+    }
+  });
+}
+

@@ -57,6 +57,7 @@ body {
    =========================================== */
 
 #app {
+  display: none;
   opacity: 0;
   visibility: hidden;
   max-width: 800px;
@@ -66,6 +67,7 @@ body {
 }
 
 #app.show {
+  display: block;
   opacity: 1;
   visibility: visible;
   animation: fadeIn 1s ease forwards;
